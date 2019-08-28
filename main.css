@@ -23,20 +23,18 @@ body {
 }
 
 #app {
-    width: 25vw;
     border: 1px solid #456789;
     border-radius: 7px;
     overflow: hidden;
 }
 
 .tile {
-    width: calc(100% / 4);
-    height: calc(100% / 4);
+    flex: 1;
     margin-left: 2.5px;
     margin-right: 2.5px;
     text-align: center;
-    line-height: 4em;
     cursor: pointer;
+    border-radius: 5px;
     border-left: 1px solid grey;
     border-bottom: 1px solid grey;
     border-right: 1px solid white;
@@ -46,9 +44,9 @@ body {
 .line {
     color: inherit;
     display: flex;
+    justify-content: space-around;
     margin-top: 5px;
     margin-bottom: 5px;
-    line-height: 40px
 }
 
 .vide {
