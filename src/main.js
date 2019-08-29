@@ -70,7 +70,7 @@ const move = (tile) => {
  * @return true | false
  */
 const isSwapable = (dest, source = caseVide) => {
-    
+
     const isInside = (dest[0] >= 0 || dest[0] < side) && (dest[1] >= 0 || dest[1] < side)
     const diffx = Math.abs(source[0] - dest[0])
     const diffy = Math.abs(source[1] - dest[1])
@@ -124,23 +124,20 @@ const getTilePos = (value) => {
 const boardRandom = (boardIn) => {
     playable = false
 
-    for (let li = 0; li < side; li++) {
-        for (let co = 0; co < side; co++) {
-            let li1 = randomising()
-            let co1 = randomising()
+    while (!playable) {
+        for (let li = 0; li < side; li++) {
+            for (let co = 0; co < side; co++) {
+                let li1 = randomising()
+                let co1 = randomising()
 
-            //permutation
-            temp = boardIn[li][co]
-            boardIn[li][co] = boardIn[li1][co1]
-            boardIn[li1][co1] = temp
+                temp = boardIn[li][co]
+                boardIn[li][co] = boardIn[li1][co1]
+                boardIn[li1][co1] = temp
+            }
         }
+        playable = testBoard(boardIn)
     }
-
-    testBoard(boardIn)
-
     board = boardIn
-
-
 }
 
 /**
@@ -150,15 +147,49 @@ function randomising() {
     return Math.floor(Math.random() * side)
 }
 
+/**
+ * check if if it is resolvable
+ * @param { [] } nextBoard result of randomised board
+ */
 const testBoard = (nextBoard) => {
     let arrayCheck = []
 
     for (li = 0; li < side; li++) {
         for (co = 0; co < side; co++) {
-            arrayCheck.push(boardIn[li][co])
+            arrayCheck.push(nextBoard[li][co])
         }
     }
+
     caseVide = getTilePos(0)
+    let emptyCountSwitch = ((side - 1) * 2 - (caseVide[0] + caseVide[1]))
+    let tilesCountSwitch = countSwitch(arrayCheck)
+
+    if ((emptyCountSwitch % 2 === 0 && tilesCountSwitch % 2 === 0) || (emptyCountSwitch % 2 !== 0 && tilesCountSwitch % 2 !== 0)) {
+        return true
+    }
+    return false
+}
+
+/**
+ * bubble sorting to get number of tiles swaps
+ * @param { [] } array to test
+ */
+const countSwitch = (array) => {
+    let swap = true
+    let counter = 0
+    while (swap) {
+        swap = false
+        for (i = 0; i < array.length - 1; i++) {
+            if (array[i] > array[i + 1]) {
+                counter++
+                var temp = array[i];
+                array[i] = array[i + 1];
+                array[i + 1] = temp;
+                swap = true
+            }
+        }
+    }
+    return counter
 }
 
 /* ======================================================= *\
@@ -230,50 +261,20 @@ const switchDom = (value) => {
  * @param { int } margin // graphical used value
  */
 function shuffleboard(board, dim, size, margin) {
-    //board = game board
-    //dim = side
-    //size, margin => for graphical use
 
-    // shuffle bi-dimensionnal board
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-            let i1 = Math.floor(Math.random() * (board.length));
-            let j1 = Math.floor(Math.random() * (board.length));
-
-            // in shuffle swap tiles
-            let temp = board[i][j];
-            board[i][j] = board[i1][j1];
-            board[i1][j1] = temp;
-        }
-    }
 
     // init a check table
     var arrayCheck = [];
 
-    // put in check table all values
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-            arrayCheck.push(board[i][j]);
-        }
-    }
-
-    // get empty coordonate
-    for (let i = 0; i < board.length; i++) {
-        for (let j = 0; j < board[i].length; j++) {
-            if (board[i][j] === 16) {
-                var caseVideLigne = i;
-                var caseVideColonne = j;
-            }
-        }
-    }
-
-
     var nbPermutationCaseVide = ((dim - 1) * 2) - (caseVideLigne + caseVideColonne);
-    
-    
     var evenOrtNot = checkNumberPermuation(arrayCheck);
+
     if ((nbPermutationCaseVide % 2 === 0 && evenOrtNot % 2 === 0) || (nbPermutationCaseVide % 2 !== 0 && evenOrtNot % 2 !== 0)) {
+
+        // true
+
     } else {
+        // false
         shuffleboard(board, dim, size, margin);
         var blankBoard = $('#container-a-example').find("div");
         blankBoard.remove();

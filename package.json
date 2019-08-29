@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "esdoc": "^1.1.0",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+    "esdoc-external-ecmascript-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0"
+  }
+}
