@@ -5,8 +5,8 @@
 let side = 4 // taille du plateau de jeu (4 x 4) taille de base
 let caseVide // coodinates of empty tile
 let value = 0 // valeur initiale
-let board // initialisation du plateau
-let initialBoard // board reference
+let board = [] // initialisation du plateau
+let initialBoard = [] // board reference
 let lineDom = [] // initialisation du plateau du DOM
 let cible = 0
 
@@ -26,8 +26,14 @@ $(document).ready(function () {
     $('#interface').on("click", 'div>p#randomise', (evt) => {
         boardRandom(board)
         drawBoard(board)
+
+        console.log(initialBoard)
+        console.log(board)
+
     })
 })
+
+
 
 /* ======================================================= *\
             Functions (move and construction)
@@ -40,6 +46,7 @@ const makeBoard = () => {
     newBoard = []
     for (let li = 0; li < side; li++) {
         newBoard.push([]) // add line on board
+        initialBoard.push([])
         for (let co = 0; co < side; co++) {
             if ((value + 1) < (side * side)) {
                 value += 1
@@ -48,10 +55,10 @@ const makeBoard = () => {
                 caseVide = [li, co] // define empty tile coordinate
             }
             newBoard[li].push(value) // add column and tile value 
+            initialBoard[li].push(value) // add column and tile value 
         }
     }
-    initialBoard = newBoard
-    board = newBoard
+    board = newBoard.slice(0)
 }
 
 /**
@@ -192,6 +199,10 @@ const countSwitch = (array) => {
     return counter
 }
 
+const isWin = () => {
+
+}
+
 /* ======================================================= *\
                 Functions (darwing)
 \* ======================================================= */
@@ -245,57 +256,4 @@ const switchDom = (value) => {
     $('div#' + value).setAttribute("id", value)
     $('div#' + value).setAttribute("value", value)
     input.textContent = value;
-}
-
-/* ==================================================== *\
-    Clement Shuffle && Check board playable
-    it's an example to put the functionality
-    in app
-\* ==================================================== */
-
-/**
- * Blend of the game board randomly and check playability
- * @param { [][] } board // bi-dimensional table
- * @param { int } dim size of board side
- * @param { int } size // graphicale used value
- * @param { int } margin // graphical used value
- */
-function shuffleboard(board, dim, size, margin) {
-
-
-    // init a check table
-    var arrayCheck = [];
-
-    var nbPermutationCaseVide = ((dim - 1) * 2) - (caseVideLigne + caseVideColonne);
-    var evenOrtNot = checkNumberPermuation(arrayCheck);
-
-    if ((nbPermutationCaseVide % 2 === 0 && evenOrtNot % 2 === 0) || (nbPermutationCaseVide % 2 !== 0 && evenOrtNot % 2 !== 0)) {
-
-        // true
-
-    } else {
-        // false
-        shuffleboard(board, dim, size, margin);
-        var blankBoard = $('#container-a-example').find("div");
-        blankBoard.remove();
-        drawBlocks($('#container-a-example'), dim, size, margin, board);
-    }
-    return board;
-}
-
-function checkNumberPermuation(arrayCheck) {
-    var test = 0;
-    for (let i = 0; i < arrayCheck.length; i++) {
-        if (arrayCheck[i] !== i + 1) {
-            for (let j = 0; j < arrayCheck.length; j++) {
-                if (arrayCheck[j] === i + 1) {
-                    test++;
-                    var temp = arrayCheck[i];
-                    arrayCheck[i] = arrayCheck[j];
-                    arrayCheck[j] = temp;
-                }
-            }
-        }
-    }
-    return test;
 }
