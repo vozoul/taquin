@@ -15,16 +15,37 @@ a {
 body {
     width: 100vw;
     height: 100vh;
+    display: flex;
+    flex-direction: column;
     background: #123456;
     color: #fff;
-    display: flex;
     justify-content: center;
     align-items: center;
 }
 
+#randomise {
+    padding: 5px 25px;
+    margin: 2px;
+    background: #456789;
+    color: #fff;
+    border-radius: 25px;
+    cursor: pointer;
+}
+
+#randomise:hover {
+    background: #7088a0
+}
+
+#randomise:active {
+    background: #133658;
+    border: 1px solid #fff;
+}
+
 #app {
+    margin-top: 2em;
     border: 1px solid #456789;
     border-radius: 7px;
+    width: 25%;
     overflow: hidden;
 }
 
