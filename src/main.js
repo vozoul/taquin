@@ -20,8 +20,11 @@ $(document).ready(function () {
         const tile = parseInt(evt.currentTarget.textContent)
         // console.log(tile)
         move(tile)
-        console.log(isWin(board, initialBoard))
-        drawBoard(board)
+        if(isWin(board, initialBoard)){
+            winner()
+        }else{
+            drawBoard(board)
+        }
     })
 
     $('#interface').on("click", 'div>p#randomise', (evt) => {
@@ -272,4 +275,16 @@ const switchDom = (value) => {
     $('div#' + value).setAttribute("id", value)
     $('div#' + value).setAttribute("value", value)
     input.textContent = value;
+}
+
+/**
+ * Display win banner
+ */
+const winner = () => {
+    lineDom = []
+    $('#app').empty()
+    youWin = document.createElement('h1')
+    youWin.textContent = "You are the Winner !!!"
+    $(youWin).appendTo('#app')
+    $('#interface>div#randomise').textContent = "reload"
 }
