@@ -2,7 +2,7 @@
             Initial variables
 \* ======================================================= */
 
-let side = 4 // taille du plateau de jeu (4 x 4) taille de base
+let side = 3 // taille du plateau de jeu (4 x 4) taille de base
 let caseVide // coodinates of empty tile
 let value = 0 // valeur initiale
 let board = [] // initialisation du plateau
@@ -18,8 +18,9 @@ $(document).ready(function () {
 
     $('body').on("click", '.tile', (evt) => {
         const tile = parseInt(evt.currentTarget.textContent)
-        console.log(tile)
+        // console.log(tile)
         move(tile)
+        console.log(isWin(board, initialBoard))
         drawBoard(board)
     })
 
@@ -172,6 +173,7 @@ const testBoard = (nextBoard) => {
     let tilesCountSwitch = countSwitch(arrayCheck)
 
     if ((emptyCountSwitch % 2 === 0 && tilesCountSwitch % 2 === 0) || (emptyCountSwitch % 2 !== 0 && tilesCountSwitch % 2 !== 0)) {
+        console.log(emptyCountSwitch, tilesCountSwitch, side)
         return true
     }
     return false
@@ -199,8 +201,22 @@ const countSwitch = (array) => {
     return counter
 }
 
-const isWin = () => {
-
+const isWin = (board, initialBoard) => {
+    let difference = side*side;
+    for(li=0; li < side; li++){
+        for(co=0; co < side; co++){
+            let pos = jQuery.inArray(initialBoard[li][co], board[li])
+            console.log(pos , co)
+            if(pos === co){
+                // console.log("tuile ok")
+                difference -= 1
+            }
+        }
+    }
+    if(difference === 0){
+        return true
+    }
+    return false
 }
 
 /* ======================================================= *\
