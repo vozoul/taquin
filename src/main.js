@@ -279,8 +279,13 @@ const recursif = (maxCoups, p) => {
     profondeur(maxCoups, p++)
 }
 
-const autoSolvBFS = () => {
-    
+const autoSolvBFS = (board) => {
+    frontier = []
+    frontier.enfiler(board)
+    known = []
+    while (!empty(frontier)) {
+
+    }
 }
 
 /* ======================================================= *\
