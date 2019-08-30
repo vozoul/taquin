@@ -34,10 +34,10 @@ $(document).ready(function () {
         boardRandom(board)
         drawBoard(board)
     })
-    
-    
+
+
     $('#interface').on("click", 'div>p#resolve', (evt) => {
-        if (autoSolv(8, 0)) {
+        if (autoSolvDFS(10, 0)) {
             console.log("win")
             winner()
         } else {
@@ -239,7 +239,6 @@ const isWin = () => {
  */
 const possible = (board) => {
     let possibilities = []
-    console.clear()
     for (let li = 0; li < side; li++) {
         for (let co = 0; co < side; co++) {
             if (isSwapable([li, co])) {
@@ -250,21 +249,21 @@ const possible = (board) => {
     return possibilities
 }
 
-const autoSolv = (max, p) => {
-    if(p === max){
+const autoSolvDFS = (max, p) => {
+    if (p > max) {
         return false
     }
-    
+
     if (isWin()) {
         return true
     }
-    
+
     let possibles = possible(board)
 
-    for(let i = 0; i < possibles.length; i++){
+    for (let i = 0; i < possibles.length; i++) {
         move(possibles[i])
-        drawBoard(board)
-        if(autoSolv(max, p+1)){
+        console.log(possibles[i])
+        if (autoSolv(max, p + 1)) {
             return true
         }
         move(possibles[i])
@@ -280,6 +279,10 @@ const recursif = (maxCoups, p) => {
     profondeur(maxCoups, p++)
 }
 
+const autoSolvBFS = () => {
+    
+}
+
 /* ======================================================= *\
                 Functions (darwing)
 \* ======================================================= */
@@ -289,7 +292,7 @@ const recursif = (maxCoups, p) => {
  */
 const interface = () => {
     let bloc = document.createElement('div')
-    
+
     let randomize = document.createElement('p')
     randomize.setAttribute("id", "randomise")
     randomize.setAttribute("class", "button")
