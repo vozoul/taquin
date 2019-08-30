@@ -23,7 +23,7 @@ body {
     align-items: center;
 }
 
-#randomise {
+.button {
     padding: 5px 25px;
     margin: 2px;
     background: #456789;
@@ -32,13 +32,17 @@ body {
     cursor: pointer;
 }
 
-#randomise:hover {
+.button:hover {
     background: #7088a0
 }
 
-#randomise:active {
+.button:active {
     background: #133658;
     border: 1px solid #fff;
+}
+
+#interface>div{
+    display: flex;
 }
 
 #app {

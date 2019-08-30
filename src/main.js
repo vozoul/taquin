@@ -9,6 +9,7 @@ let board = [] // initialisation du plateau
 let initialBoard = [] // board reference
 let lineDom = [] // initialisation du plateau du DOM
 let cible = 0
+let click = 0
 
 
 $(document).ready(function () {
@@ -18,22 +19,31 @@ $(document).ready(function () {
 
     $('body').on("click", '.tile', (evt) => {
         const tile = parseInt(evt.currentTarget.textContent)
-        // console.log(tile)
+        click += 1
         move(tile)
-        if(isWin(board, initialBoard)){
+        if (isWin()) {
             winner()
-        }else{
+            console.log("fini en : " + click + " coups")
+        } else {
             drawBoard(board)
         }
     })
 
     $('#interface').on("click", 'div>p#randomise', (evt) => {
+        click = 0
         boardRandom(board)
         drawBoard(board)
-
-        console.log(initialBoard)
-        console.log(board)
-
+    })
+    
+    
+    $('#interface').on("click", 'div>p#resolve', (evt) => {
+        if (autoSolv(8, 0)) {
+            console.log("win")
+            winner()
+        } else {
+            console.log("unSolvable")
+            unSolvable()
+        }
     })
 })
 
@@ -116,8 +126,8 @@ const swap = (dest) => {
  */
 const getTilePos = (value) => {
     // Parcour le tableau pour retourner les coordonnées de ma case
-    for (li = 0; li < side; li++) {
-        for (co = 0; co < side; co++) {
+    for (let li = 0; li < side; li++) {
+        for (let co = 0; co < side; co++) {
             tile = board[li][co]
             if (tile === value) {
                 dest = [li, co]
@@ -165,8 +175,8 @@ function randomising() {
 const testBoard = (nextBoard) => {
     let arrayCheck = []
 
-    for (li = 0; li < side; li++) {
-        for (co = 0; co < side; co++) {
+    for (let li = 0; li < side; li++) {
+        for (let co = 0; co < side; co++) {
             arrayCheck.push(nextBoard[li][co])
         }
     }
@@ -176,7 +186,6 @@ const testBoard = (nextBoard) => {
     let tilesCountSwitch = countSwitch(arrayCheck)
 
     if ((emptyCountSwitch % 2 === 0 && tilesCountSwitch % 2 === 0) || (emptyCountSwitch % 2 !== 0 && tilesCountSwitch % 2 !== 0)) {
-        console.log(emptyCountSwitch, tilesCountSwitch, side)
         return true
     }
     return false
@@ -204,22 +213,71 @@ const countSwitch = (array) => {
     return counter
 }
 
-const isWin = (board, initialBoard) => {
-    let difference = side*side;
-    for(li=0; li < side; li++){
-        for(co=0; co < side; co++){
+/**
+ * Test if is won
+ * @return true | false
+ */
+const isWin = () => {
+    let difference = side * side;
+    for (let li = 0; li < side; li++) {
+        for (let co = 0; co < side; co++) {
             let pos = jQuery.inArray(initialBoard[li][co], board[li])
-            console.log(pos , co)
-            if(pos === co){
-                // console.log("tuile ok")
+            if (pos === co) {
                 difference -= 1
             }
         }
     }
-    if(difference === 0){
+    if (difference === 0) {
         return true
     }
     return false
+}
+
+/**
+ * check for possible moves
+ * @return { [] } possibilities array of movable tiles
+ */
+const possible = (board) => {
+    let possibilities = []
+    console.clear()
+    for (let li = 0; li < side; li++) {
+        for (let co = 0; co < side; co++) {
+            if (isSwapable([li, co])) {
+                possibilities.push(board[li][co])
+            }
+        }
+    }
+    return possibilities
+}
+
+const autoSolv = (max, p) => {
+    if(p === max){
+        return false
+    }
+    
+    if (isWin()) {
+        return true
+    }
+    
+    let possibles = possible(board)
+
+    for(let i = 0; i < possibles.length; i++){
+        move(possibles[i])
+        drawBoard(board)
+        if(autoSolv(max, p+1)){
+            return true
+        }
+        move(possibles[i])
+    }
+    return false
+}
+
+
+//Exemple recursif
+const recursif = (maxCoups, p) => {
+    //si p < maxCoups
+    if (maxCoups === p) { console.log(p) }
+    profondeur(maxCoups, p++)
 }
 
 /* ======================================================= *\
@@ -231,10 +289,19 @@ const isWin = (board, initialBoard) => {
  */
 const interface = () => {
     let bloc = document.createElement('div')
-    let button = document.createElement('p')
-    button.setAttribute("id", "randomise")
-    button.textContent = "randomise"
-    $(button).appendTo(bloc)
+    
+    let randomize = document.createElement('p')
+    randomize.setAttribute("id", "randomise")
+    randomize.setAttribute("class", "button")
+    randomize.textContent = "randomise"
+
+    let resolve = document.createElement('p')
+    resolve.setAttribute("id", "resolve")
+    resolve.setAttribute("class", "button")
+    resolve.textContent = "resolve"
+
+    $(bloc).append(randomize, resolve)
+
     $(bloc).appendTo($('#interface'))
 }
 
@@ -286,5 +353,15 @@ const winner = () => {
     youWin = document.createElement('h1')
     youWin.textContent = "You are the Winner !!!"
     $(youWin).appendTo('#app')
-    $('#interface>div#randomise').textContent = "reload"
+}
+
+/**
+ * Display unsolvable banner
+ */
+const unSolvable = () => {
+    lineDom = []
+    $('#app').empty()
+    youWin = document.createElement('h1')
+    youWin.textContent = "Unsolvable Game"
+    $(youWin).appendTo('#app')
 }
