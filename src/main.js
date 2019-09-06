@@ -39,9 +39,14 @@ const swap = (a, b) => {
 const insertion = (dat) => {
     nbExec = 0
     for (let i = 0; i < dat.length; i++) {
-        for (k = i; k > 1 && dat[k] < dat[k - 1]; k--) {
-            nbExec += 1
-            swap(k, k - 1)
+        console.log(dat.length)
+        console.log(i)
+        for (k = i; k > 0; k--) {
+            if (dat[k] < dat[k - 1]){
+                console.log(k)
+                nbExec += 1
+                swap(k, k - 1)
+            }
         }
     }
     console.log("insertion execution : " + nbExec + "\n")
@@ -89,8 +94,6 @@ const bubble = (dat) => {
 
 const shell = (dat) => {
     nbExec = 0
-    gap = 1
-
     
     nbExec += 1
 
